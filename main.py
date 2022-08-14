@@ -6,6 +6,7 @@ import time
 from pyrogram import Client
 from pyrogram import filters
 
+from pyrogram.types import Message
 import mdisk
 import split
 from split import TG_SPLIT_SIZE
@@ -61,7 +62,7 @@ def progress(current, total, message):
     with open(f'{message.id}upstatus.txt',"w") as fileup:
         fileup.write(f"{current * 100 / total:.1f}%")
 
-
+FILE_ID = None
 def down(message,link):
     msg = app.send_message(message.chat.id, 'Downloading...', reply_to_message_id=message.id)
     sta = threading.Thread(target=lambda:status(str(message.id),msg),daemon=True)
@@ -86,7 +87,7 @@ def down(message,link):
     else:
         app.edit_message_text(message.chat.id, msg.id, "Uploading...")
         try:
-            app.send_document(message.chat.id,document=file, reply_to_message_id=message.id, progress=progress, progress_args=[message])
+            app.send_document(message.chat.id, thumb=FILE_ID, document=file, reply_to_message_id=message.id, progress=progress, progress_args=[message])
         except:
             app.send_message(message.chat.id,"Error in Merging File")
         os.remove(file)
@@ -104,5 +105,13 @@ def echo(client, message):
             d.start()
     except:
         app.send_message(message.chat.id, 'send only mdisk link with command followed by link')
+
+
+@app.on_message(filters.command(["thumb"]))
+def thumbnail_handler(client, m:Message):
+    if m.reply_to_message and m.reply_to_message.photo:
+        fileid = m.reply_to_message.photo.file_id
+        FILE_ID = fileid
+        m.reply_text("Thumbnail has been set")
 
 app.run()    
