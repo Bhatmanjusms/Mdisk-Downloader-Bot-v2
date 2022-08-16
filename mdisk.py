@@ -84,7 +84,7 @@ def mdow(link,message):
 
     # getting custom headers
     custom = collection.find_one({"tag": "custom"})
-    custom = f'{custom["value"]} ' if custom and custom["value"] else ""
+    custom = f'{custom["value"]}' if custom and custom["value"] else ""
 
     output = f'{custom}{output.replace(".mkv", "").replace(".mp4", "")}'
     
