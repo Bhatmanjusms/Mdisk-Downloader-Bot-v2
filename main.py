@@ -140,12 +140,12 @@ def custom_filename_handler(client, m:Message):
         if "remove" in custom:
             custom = None
         
-        myquery = { "tag": "custom_filename" }
+        myquery = { "tag": "custom" }
         newvalues = { "$set": { "value": custom } }
 
         collection.update_one(myquery, newvalues, True)
 
-        txt.edit("Custom Filename has been Updated to ")
+        m.reply_text("Custom Filename has been Updated to ")
     else:
         mode = collection.find_one({"tag": "custom"})
         mode = f'{mode["value"]} ' if mode and mode["value"] else ""
