@@ -10,7 +10,7 @@ from pyrogram.types import Message, CallbackQuery
 import mdisk
 import split
 from split import TG_SPLIT_SIZE
-from config import API_ID, API_HASH, BOT_TOKEN
+from config import ADMINS, API_ID, API_HASH, BOT_TOKEN
 from database import collection
 
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
@@ -24,7 +24,7 @@ api_id = API_ID
 app = Client("my_bot",api_id=api_id, api_hash=api_hash,bot_token=bot_token)
 
 
-@app.on_message(filters.command(["start"]))
+@app.on_message(filters.command(["start"]) & filters.user(ADMINS))
 def echo(client, message):
     app.send_message(message.chat.id, 'Send link like this >> /mdisk link')
 
@@ -69,7 +69,7 @@ def progress(current, total, message):
         fileup.write(f"{current * 100 / total:.1f}%")
 
 
-@app.on_message(filters.command(["log"]))
+@app.on_message(filters.command(["log"]) & filters.user(ADMINS))
 def log_channel_handler(client, m:Message):
     log = collection.find_one({ "tag": "log_channel" })
     if len(m.command) == 2:
@@ -90,7 +90,7 @@ def log_channel_handler(client, m:Message):
         m.reply_text(f"/log -100xx\nCurrent Log: {id}") 
 
 
-@app.on_message(filters.command(["setthumb"]))
+@app.on_message(filters.command(["setthumb"]) & filters.user(ADMINS))
 def thumbnail_handler(client, m:Message):
     if m.reply_to_message and m.reply_to_message.photo:
         fileid = m.reply_to_message.photo.file_id
@@ -105,13 +105,13 @@ def thumbnail_handler(client, m:Message):
         txt.edit("Thumbnail has been set")
 
 
-@app.on_message(filters.command(["showthumb"]))
+@app.on_message(filters.command(["showthumb"]) & filters.user(ADMINS))
 def show_thumbnail_handler(client, m:Message):
     thumb = (collection.find_one({"tag": "thumbnail"}))
     m.reply_photo(thumb["value"]) if thumb and thumb["value"] else m.reply_text("None")
 
 
-@app.on_message(filters.command(["delthumb"]))
+@app.on_message(filters.command(["delthumb"]) & filters.user(ADMINS))
 def del_thumbnail_handler(client, m:Message):
 
     myquery = { "tag": "thumbnail" }
@@ -120,7 +120,7 @@ def del_thumbnail_handler(client, m:Message):
     collection.update_one(myquery, newvalues, True)
     m.reply_text("Deleted")
 
-@app.on_message(filters.command(["mode"]))
+@app.on_message(filters.command(["mode"]) & filters.user(ADMINS))
 def doc_video_handler(client, m:Message):
     REPLY_MARKUP  = InlineKeyboardMarkup([
         [
@@ -135,7 +135,7 @@ def doc_video_handler(client, m:Message):
 
     m.reply_text(f"Current Mode: {mode}", reply_markup=REPLY_MARKUP)
 
-@app.on_message(filters.command(["custom"]))
+@app.on_message(filters.command(["custom"]) & filters.user(ADMINS))
 def custom_filename_handler(client, m:Message):
     if len(m.command) != 1:
         print(m.text)
@@ -156,7 +156,7 @@ def custom_filename_handler(client, m:Message):
         txt = m.reply_text(f"/custom @ur channel username\nCurrent: {mode}")
 
 
-@app.on_callback_query(filters.regex("mode"))
+@app.on_callback_query(filters.regex("mode") & filters.user(ADMINS))
 def doc_video_cb_handler(client, m:CallbackQuery):
     mode = m.data.split("_")[1]
 
@@ -222,7 +222,7 @@ def down(message,link):
     app.delete_messages(message.chat.id,message_ids=[msg.id])
 
 
-@app.on_message(filters.command("mdisk"))
+@app.on_message(filters.command("mdisk") & filters.user(ADMINS))
 def echo(client, message):
     if temp.IS_RUNNING:
         return message.reply_text("Already a process is running", quote=True)
