@@ -244,7 +244,7 @@ def echo(client, message):
                 while temp.IS_RUNNING:
                     if not temp.IS_RUNNING:
                         break
-                    print()
+                    pass
                 # d.start()
                 time.sleep(30)
     except:
