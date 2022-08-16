@@ -4,7 +4,7 @@ import os
 import subprocess
 import threading
 import shutil
-
+from database import collection
 # setting
 currentFile = __file__
 realPath = os.path.realpath(currentFile)
@@ -81,7 +81,12 @@ def mdow(link,message):
     print("Video Downloaded")
     # renaming
     output = requests.get(url=URL, headers=header).json()['filename']
-    output = output.replace(".mkv", "").replace(".mp4", "")
+
+    # getting custom headers
+    mode = collection.find_one({"tag": "mode"})
+    mode = f'{mode["value"]} ' if mode and mode["value"] else ""
+
+    output = f'{mode}{output.replace(".mkv", "").replace(".mp4", "")}'
     
     # merge
     audi.join()
