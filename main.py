@@ -246,7 +246,6 @@ def echo(client, message):
                         break
                     print()
                 # d.start()
-                
 
     except:
         app.send_message(message.chat.id, 'send only mdisk link with command followed by link')
