@@ -241,11 +241,11 @@ def echo(client, message):
                 
                 while temp.IS_RUNNING:
                     if not temp.IS_RUNNING:
+                        app.send_message(message.chat.id, 'Sleeping for 30 seconds')
+                        time.sleep(30)
                         break
                     print()
                 # d.start()
-                app.send_message(message.chat.id, 'Sleeping for 30 seconds')
-                time.sleep(30)
                 
 
     except:
