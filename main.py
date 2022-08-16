@@ -2,7 +2,7 @@ import os
 import threading
 import subprocess
 import time
-
+from multiprocessing.pool import ThreadPool
 from pyrogram import Client
 from pyrogram import filters
 
@@ -221,11 +221,14 @@ def echo(client, message):
 
         if len(links) > 1:
             message.reply_text("Multiple Links found")
+        pool = ThreadPool(2)
 
         for link in links:
             if "mdisk" in link:
-                d = threading.Thread(target=lambda:down(message,link),daemon=True)
-                d.start()
+                # d = threading.Thread(target=lambda:down(message,link),daemon=True)
+                pool.apply_async(down, args=(message,link))
+                # d.start()
+
     except:
         app.send_message(message.chat.id, 'send only mdisk link with command followed by link')
 
