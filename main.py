@@ -135,6 +135,7 @@ def doc_video_handler(client, m:Message):
 @app.on_message(filters.command(["custom"]))
 def custom_filename_handler(client, m:Message):
     if len(m.command) != 1:
+        print(m.text.replace("custom ", ""))
         custom = m.text.replace("custom ", "")
 
         if "remove" in custom:
@@ -145,7 +146,7 @@ def custom_filename_handler(client, m:Message):
 
         collection.update_one(myquery, newvalues, True)
 
-        m.reply_text("Custom Filename has been Updated to ")
+        m.reply_text(f"Custom Filename has been Updated to {custom}")
     else:
         mode = collection.find_one({"tag": "custom"})
         mode = f'{mode["value"]} ' if mode and mode["value"] else ""
