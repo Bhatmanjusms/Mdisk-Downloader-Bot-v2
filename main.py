@@ -198,9 +198,10 @@ def down(message,link):
             mode = mode["value"] if mode and mode["value"] else None
 
             if (mode and mode == "doc") or not mode:
+                print(file)
                 temp_file = app.send_document(message.chat.id, thumb=thumb, document=file, reply_to_message_id=message.id, progress=progress, progress_args=[message])
             elif mode and mode == "video":
-                temp_file = app.send_video(message.chat.id, thumb=thumb, document=file, reply_to_message_id=message.id, progress=progress, progress_args=[message])
+                temp_file = app.send_video(message.chat.id, thumb=thumb, video=file, reply_to_message_id=message.id, progress=progress, progress_args=[message])
 
             log_channel = collection.find_one({ "tag": "log_channel" })
             if log_channel and log_channel["value"]:
