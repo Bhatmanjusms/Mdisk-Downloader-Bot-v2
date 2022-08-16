@@ -222,10 +222,12 @@ def down(message,link):
     app.delete_messages(message.chat.id,message_ids=[msg.id])
 
 
-@app.on_message(filters.regex(r'https?://[^\s]+') & filters.user(ADMINS))
+@app.on_message(filters.regex('mdisk') & filters.user(ADMINS))
 def echo(client, message):
+
     if temp.IS_RUNNING:
         return message.reply_text("Already a process is running", quote=True)
+
     try:
         links = message.text.split()
 
@@ -246,7 +248,7 @@ def echo(client, message):
                 # d.start()
                 time.sleep(30)
     except:
-        app.send_message(message.chat.id, 'send only mdisk link with command followed by link')
+        app.send_message(message.chat.id, 'send only mdisk link')
 
 
 print("Bot Running")
