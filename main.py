@@ -15,6 +15,9 @@ from database import collection
 
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
+class temp(object):
+    IS_RUNNING = False
+
 bot_token = BOT_TOKEN
 api_hash = API_HASH
 api_id = API_ID
@@ -164,7 +167,10 @@ def doc_video_cb_handler(client, m:CallbackQuery):
     m.edit_message_text("Changed", reply_markup=None)
 
 def down(message,link):
-    msg = app.send_message(message.chat.id, 'Downloading...', reply_to_message_id=message.id)
+
+    temp.IS_RUNNING = True
+
+    msg = app.send_message(message.chat.id, f'Downloading... {link}', reply_to_message_id=message.id)
     sta = threading.Thread(target=lambda:status(str(message.id),msg),daemon=True)
     sta.start()
 
@@ -206,6 +212,8 @@ def down(message,link):
             if log_channel and log_channel["value"]:
                 temp_file.copy(log_channel["value"])
 
+            temp.IS_RUNNING = False
+
         except Exception as e:
             app.send_message(message.chat.id,e)
         os.remove(file)
@@ -216,18 +224,28 @@ def down(message,link):
 
 @app.on_message(filters.command("mdisk"))
 def echo(client, message):
+    if temp.IS_RUNNING:
+        return message.reply_text("Already a process is running")
     try:
-        links = message.text.replace("mdisk ", "").split()
+        links = message.text.replace("/mdisk ", "").split()
 
         if len(links) > 1:
             message.reply_text("Multiple Links found")
-        pool = ThreadPool(2)
+        pool = ThreadPool(1)
+
 
         for link in links:
             if "mdisk" in link:
                 # d = threading.Thread(target=lambda:down(message,link),daemon=True)
                 pool.apply_async(down, args=(message,link))
+                
+                while temp.IS_RUNNING:
+                    if not temp.IS_RUNNING:
+                        break
+                    print()
                 # d.start()
+
+                time.sleep(30)
 
     except:
         app.send_message(message.chat.id, 'send only mdisk link with command followed by link')
