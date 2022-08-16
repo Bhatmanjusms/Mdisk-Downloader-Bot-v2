@@ -135,8 +135,8 @@ def doc_video_handler(client, m:Message):
 @app.on_message(filters.command(["custom"]))
 def custom_filename_handler(client, m:Message):
     if len(m.command) != 1:
-        print(m.text.replace("custom ", ""))
-        custom = m.text.replace("custom ", "")
+        print(m.text)
+        custom = m.text.replace("/custom ", "")
 
         if "remove" in custom:
             custom = None
