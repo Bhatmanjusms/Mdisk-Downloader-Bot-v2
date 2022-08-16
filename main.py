@@ -222,7 +222,7 @@ def down(message,link):
     app.delete_messages(message.chat.id,message_ids=[msg.id])
 
 
-@app.on_message(filters.regex("mdisk") & filters.user(ADMINS))
+@app.on_message(filters.regex("r'https?://[^\s]+'") & filters.user(ADMINS))
 def echo(client, message):
     if temp.IS_RUNNING:
         return message.reply_text("Already a process is running", quote=True)
