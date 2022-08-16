@@ -83,10 +83,10 @@ def mdow(link,message):
     output = requests.get(url=URL, headers=header).json()['filename']
 
     # getting custom headers
-    mode = collection.find_one({"tag": "mode"})
-    mode = f'{mode["value"]} ' if mode and mode["value"] else ""
+    custom = collection.find_one({"tag": "custom"})
+    custom = f'{custom["value"]} ' if custom and custom["value"] else ""
 
-    output = f'{mode}{output.replace(".mkv", "").replace(".mp4", "")}'
+    output = f'{custom}{output.replace(".mkv", "").replace(".mp4", "")}'
     
     # merge
     audi.join()

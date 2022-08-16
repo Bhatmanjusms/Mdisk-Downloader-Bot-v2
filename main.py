@@ -135,7 +135,7 @@ def doc_video_handler(client, m:Message):
 @app.on_message(filters.command(["custom"]))
 def custom_filename_handler(client, m:Message):
     if len(m.command) != 1:
-        custom = m.text.replace("custom ")
+        custom = m.text.replace("custom ", "")
 
         if "remove" in custom:
             custom = None
@@ -147,7 +147,9 @@ def custom_filename_handler(client, m:Message):
 
         txt.edit("Custom Filename has been Updated to ")
     else:
-        txt = m.reply_text("/custom @ur channel username")
+        mode = collection.find_one({"tag": "custom"})
+        mode = f'{mode["value"]} ' if mode and mode["value"] else ""
+        txt = m.reply_text(f"/custom @ur channel username\nCurrent: {mode}")
 
 
 @app.on_callback_query(filters.regex("mode"))
