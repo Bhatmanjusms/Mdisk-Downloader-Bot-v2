@@ -225,7 +225,7 @@ def down(message,link):
 @app.on_message(filters.command("mdisk"))
 def echo(client, message):
     if temp.IS_RUNNING:
-        return message.reply_text("Already a process is running")
+        return message.reply_text("Already a process is running", quote=True)
     try:
         links = message.text.replace("/mdisk ", "").split()
 
@@ -244,8 +244,9 @@ def echo(client, message):
                         break
                     print()
                 # d.start()
-
+                app.send_message(message.chat.id, 'Sleeping for 30 seconds')
                 time.sleep(30)
+                
 
     except:
         app.send_message(message.chat.id, 'send only mdisk link with command followed by link')
